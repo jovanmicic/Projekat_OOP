@@ -15,11 +15,11 @@ namespace Projekat_OOP
         public frmIgra()
         {
             InitializeComponent();
-            for (int y = 0; y < matrica.GetLength(1); y++)
+            for (int n = 0; n < matrica.GetLength(1); n++)
             {
-                for (int x = 0; x < matrica.GetLength(0); x++)
+                for (int m = 0; m < matrica.GetLength(0); m++)
                 {
-                    matrica[x, y] = new Polje();
+                    matrica[m, n] = new Polje();
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace Projekat_OOP
                     Otvori_Polje(matrica, m, n, g, fontic, cetka, broj_neotvorenih_polja);
 
 
-                    if (broj_neotvorenih_polja == 0)
+                    if (broj_neotvorenih_polja == broj_mina)
                     {
                         igra_gotova = true;
                         timer1.Stop();
@@ -113,6 +113,9 @@ namespace Projekat_OOP
                     timer1.Stop();
                     vreme = 0;
                     MessageBox.Show("KRAJ IGRE", "IZGUBILI STE");
+
+                    tbxBrojZastavica.Text = broj_zastavica.ToString();
+                    tbxBrojZastavica.Refresh();
                 }
 
             }
@@ -136,14 +139,10 @@ namespace Projekat_OOP
                     broj_zastavica++;
                     matrica[m, n].zastava = false;
                 }
-
                 tbxBrojZastavica.Text = broj_zastavica.ToString();
                 tbxBrojZastavica.Refresh();
-
             }
-            
         }
-
 
         //-----------------------------------algoritam-------------------------------------//
         static Polje[,] Upisi_minice(Polje[,] matrica, int broj_mina)
@@ -165,12 +164,12 @@ namespace Projekat_OOP
             return matrica;
         }
 
-        static int Izbroji_Susede(Polje[,] matrica, int x, int y, Graphics g, Font font, Brush cetka)
+        static int Izbroji_Susede(Polje[,] matrica, int m, int n, Graphics g, Font font, Brush cetka)
         {
             int susedi = 0;
-            for (int i = x - 1; i < x + 2; i++)
+            for (int i = m - 1; i < m + 2; i++)
             {
-                for (int j = y - 1; j < y + 2; j++)
+                for (int j = n - 1; j < n + 2; j++)
                 {
                     if (Proveri_Dimenzije(i, j, matrica) && matrica[i, j].mina == true)
                     {
@@ -186,34 +185,33 @@ namespace Projekat_OOP
 
 
 
-        static void Otvori_Susede(Polje[,] tabela, int x, int y, Graphics g, Font font, Brush cetka, int br)
+        static void Otvori_Susede(Polje[,] matrica, int m, int n, Graphics g, Font font, Brush cetka, int br)
         {
-            Otvori_Polje(tabela, x - 1, y - 1, g, font, cetka, br); Otvori_Polje(tabela, x - 1, y, g, font, cetka, br);
-            Otvori_Polje(tabela, x - 1, y + 1, g, font, cetka, br); Otvori_Polje(tabela, x, y - 1, g, font, cetka, br);
-            Otvori_Polje(tabela, x, y + 1, g, font, cetka, br); Otvori_Polje(tabela, x + 1, y - 1, g, font, cetka, br);
-            Otvori_Polje(tabela, x + 1, y, g, font, cetka, br); Otvori_Polje(tabela, x + 1, y + 1, g, font, cetka, br);
+            Otvori_Polje(matrica, m - 1, n - 1, g, font, cetka, br); Otvori_Polje(matrica, m - 1, n, g, font, cetka, br);
+            Otvori_Polje(matrica, m - 1, n + 1, g, font, cetka, br); Otvori_Polje(matrica, m, n - 1, g, font, cetka, br);
+            Otvori_Polje(matrica, m, n + 1, g, font, cetka, br); Otvori_Polje(matrica, m + 1, n - 1, g, font, cetka, br);
+            Otvori_Polje(matrica, m + 1, n, g, font, cetka, br); Otvori_Polje(matrica, m + 1, n + 1, g, font, cetka, br);
         }
 
-        static void Otvori_Polje(Polje[,] tabela, int x, int y, Graphics g, Font font, Brush cetka, int br)
+        static void Otvori_Polje(Polje[,] matrica, int m, int n, Graphics g, Font font, Brush cetka, int br)
         {
 
-            g.DrawString(Izbroji_Susede(tabela, x, y, g, font, cetka).ToString(), font, cetka, x * 40, y * 40);
+            g.DrawString(Izbroji_Susede(matrica, m, n, g, font, cetka).ToString(), font, cetka, m * 40, n * 40);
             br--;
-            if (Proveri_Dimenzije(x, y, tabela) && tabela[x, y].otvoreno != true)
+            if (Proveri_Dimenzije(m, n, matrica) && matrica[m, n].otvoreno != true)
             {
-                tabela[x, y].otvoreno = true;
-                if (Izbroji_Susede(tabela, x, y, g, font, cetka) == 0)
+                matrica[m, n].otvoreno = true;
+                if (Izbroji_Susede(matrica, m, n, g, font, cetka) == 0)
                 {
-                    Otvori_Susede(tabela, x, y, g, font, cetka, br);
+                    Otvori_Susede(matrica, m, n, g, font, cetka, br);
                 }
-
             }
             else return;
         }
 
-        static bool Proveri_Dimenzije(int x, int y, Polje[,] matrica)
+        static bool Proveri_Dimenzije(int m, int n, Polje[,] matrica)
         {
-            return x >= 0 && x < matrica.GetLength(0) && y >= 0 && y < matrica.GetLength(1);
+            return m >= 0 && m < matrica.GetLength(0) && n >= 0 && n < matrica.GetLength(1);
         }
 
         private void frmIgra_Load(object sender, EventArgs e)
