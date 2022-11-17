@@ -15,10 +15,22 @@ namespace Projekat_OOP
         public frmIgra()
         {
             InitializeComponent();
-            
+            for (int y = 0; y < matrica.GetLength(1); y++)
+            {
+                for (int x = 0; x < matrica.GetLength(0); x++)
+                {
+                    matrica[x, y] = new Polje();
+                }
+            }
         }
-        
-        
+        Polje[,] matrica = new Polje[9, 9];
+        bool igra_gotova = true;
+        int broj_mina = 10;
+        int broj_neotvorenih_polja = 9 * 9;//kada broj neotvorenih polja bude jednak broju mina, igra je gotova-pobeda
+        Pen olovka = new Pen(Color.Black, 2);
+        Font fontic = new Font("Arial", 30);
+        SolidBrush cetka = new SolidBrush(Color.Black);
+
         static int[] nizx = new int[10];
         static int[] nizy = new int[10];
         int broj_zastavica = 10;
@@ -65,8 +77,46 @@ namespace Projekat_OOP
         private void pbxTabela_MouseClick(object sender, MouseEventArgs e)
         {
             Graphics g = pbxTabela.CreateGraphics();
-            
-            
+            if (e.Button == MouseButtons.Left)
+            {
+                int m = e.X / (pbxTabela.Width / 9);
+                int n = e.Y / (pbxTabela.Height / 9);
+
+                if (!matrica[m, n].mina && !matrica[m, n].otvoreno)
+                {
+                    if (matrica[m, n].zastava == true)
+                    {
+                        broj_zastavica++;
+                        matrica[m, n].zastava = false;
+                        cetka.Color = pbxTabela.BackColor;
+                        g.FillRectangle(cetka, m * (pbxTabela.Width / 9), n * (pbxTabela.Height / 9), 40, 40);
+                        cetka.Color = Color.Black;
+                    }
+                    Otvori_Polje(matrica, m, n, g, fontic, cetka, broj_neotvorenih_polja);
+
+
+                    if (broj_neotvorenih_polja == 0)
+                    {
+                        igra_gotova = true;
+                        timer1.Stop();
+                        vreme = 0;
+                        MessageBox.Show("KRAJ IGRE", "POBEDILI STE");
+                    }
+                }
+                else if (matrica[m, n].mina && !matrica[m, n].otvoreno)
+                {
+                    igra_gotova = true;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        g.DrawString("☼", fontic, cetka, nizx[i] * (pbxTabela.Width / 9), nizy[i] * (pbxTabela.Height / 9));
+                    }
+                    timer1.Stop();
+                    vreme = 0;
+                    MessageBox.Show("KRAJ IGRE", "IZGUBILI STE");
+                }
+
+            }
+
             else if (e.Button == MouseButtons.Right )
             {
                 int m = e.X / (pbxTabela.Width / 9);
@@ -94,8 +144,77 @@ namespace Projekat_OOP
             
         }
 
+
         //-----------------------------------algoritam-------------------------------------//
-        
+        static Polje[,] Upisi_minice(Polje[,] matrica, int broj_mina)
+        {
+
+            Random rand_generator = new Random();
+            for (int i = 0; i < broj_mina; i++)
+            {
+                int mina_x = rand_generator.Next(0, 9);
+                int mina_y = rand_generator.Next(0, 9);
+                nizx[i] = mina_x;
+                nizy[i] = mina_y;
+                if (matrica[mina_x, mina_y].mina)
+                {
+                    i--;
+                }
+                else matrica[mina_x, mina_y].mina = true;
+            }
+            return matrica;
+        }
+
+        static int Izbroji_Susede(Polje[,] matrica, int x, int y, Graphics g, Font font, Brush cetka)
+        {
+            int susedi = 0;
+            for (int i = x - 1; i < x + 2; i++)
+            {
+                for (int j = y - 1; j < y + 2; j++)
+                {
+                    if (Proveri_Dimenzije(i, j, matrica) && matrica[i, j].mina == true)
+                    {
+                        susedi++;
+                    }
+                }
+            }
+
+            return susedi;
+        }
+
+        //algoritam
+
+
+
+        static void Otvori_Susede(Polje[,] tabela, int x, int y, Graphics g, Font font, Brush cetka, int br)
+        {
+            Otvori_Polje(tabela, x - 1, y - 1, g, font, cetka, br); Otvori_Polje(tabela, x - 1, y, g, font, cetka, br);
+            Otvori_Polje(tabela, x - 1, y + 1, g, font, cetka, br); Otvori_Polje(tabela, x, y - 1, g, font, cetka, br);
+            Otvori_Polje(tabela, x, y + 1, g, font, cetka, br); Otvori_Polje(tabela, x + 1, y - 1, g, font, cetka, br);
+            Otvori_Polje(tabela, x + 1, y, g, font, cetka, br); Otvori_Polje(tabela, x + 1, y + 1, g, font, cetka, br);
+        }
+
+        static void Otvori_Polje(Polje[,] tabela, int x, int y, Graphics g, Font font, Brush cetka, int br)
+        {
+
+            g.DrawString(Izbroji_Susede(tabela, x, y, g, font, cetka).ToString(), font, cetka, x * 40, y * 40);
+            br--;
+            if (Proveri_Dimenzije(x, y, tabela) && tabela[x, y].otvoreno != true)
+            {
+                tabela[x, y].otvoreno = true;
+                if (Izbroji_Susede(tabela, x, y, g, font, cetka) == 0)
+                {
+                    Otvori_Susede(tabela, x, y, g, font, cetka, br);
+                }
+
+            }
+            else return;
+        }
+
+        static bool Proveri_Dimenzije(int x, int y, Polje[,] matrica)
+        {
+            return x >= 0 && x < matrica.GetLength(0) && y >= 0 && y < matrica.GetLength(1);
+        }
 
         private void frmIgra_Load(object sender, EventArgs e)
         {
