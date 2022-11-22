@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Projekat_OOP
 {
-    class Polje
+    class Polje //treba da bude struktura a ne klasa
     {
         public bool otvoreno = false;
         public bool mina = false;

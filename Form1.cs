@@ -54,6 +54,9 @@ namespace Projekat_OOP
             vreme = 0;
             timer1.Start();
 
+            tbxBrojZastavica.Text = broj_zastavica.ToString();
+            tbxBrojZastavica.Refresh();
+
             broj_zastavica = 10;
 
 
@@ -66,35 +69,33 @@ namespace Projekat_OOP
             {
                 e.Graphics.DrawLine(olovka, 0, i, sirina, i);
             }
-            for (int j = 0; j <= sirina; j += sirina /9)
+            for (int j = 0; j <= sirina; j += sirina / 9)
             {
                 e.Graphics.DrawLine(olovka, j, 0, j, visina);
             }
         }
 
-        
-        
+
+
         private void pbxTabela_MouseClick(object sender, MouseEventArgs e)
         {
             Graphics g = pbxTabela.CreateGraphics();
-            if (e.Button == MouseButtons.Left)
+            
+            tbxBrojZastavica.Text = broj_zastavica.ToString();
+            tbxBrojZastavica.Refresh();
+            int m = e.X / (pbxTabela.Width / 9);
+            int n = e.Y / (pbxTabela.Height / 9);
+            if (broj_neotvorenih_polja == broj_mina)
             {
-                int m = e.X / (pbxTabela.Width / 9);
-                int n = e.Y / (pbxTabela.Height / 9);
-
-                if (!matrica[m, n].mina && !matrica[m, n].otvoreno)
+                igra_gotova = true;
+                timer1.Stop();
+                vreme = 0;
+                MessageBox.Show("KRAJ IGRE", "POBEDILI STE");
+            }
+            if (!matrica[m, n].zastava)
+            {
+                if (e.Button == MouseButtons.Left)
                 {
-                    if (matrica[m, n].zastava == true)
-                    {
-                        broj_zastavica++;
-                        matrica[m, n].zastava = false;
-                        cetka.Color = pbxTabela.BackColor;
-                        g.FillRectangle(cetka, m * (pbxTabela.Width / 9), n * (pbxTabela.Height / 9), 40, 40);
-                        cetka.Color = Color.Black;
-                    }
-                    Otvori_Polje(matrica, m, n, g, fontic, cetka, broj_neotvorenih_polja);
-
-
                     if (broj_neotvorenih_polja == broj_mina)
                     {
                         igra_gotova = true;
@@ -102,46 +103,57 @@ namespace Projekat_OOP
                         vreme = 0;
                         MessageBox.Show("KRAJ IGRE", "POBEDILI STE");
                     }
-                }
-                else if (matrica[m, n].mina && !matrica[m, n].otvoreno)
-                {
-                    igra_gotova = true;
-                    for (int i = 0; i < 10; i++)
+                    if (!matrica[m, n].mina && !matrica[m, n].otvoreno)
                     {
-                        g.DrawString("☼", fontic, cetka, nizx[i] * (pbxTabela.Width / 9), nizy[i] * (pbxTabela.Height / 9));
-                    }
-                    timer1.Stop();
-                    vreme = 0;
-                    MessageBox.Show("KRAJ IGRE", "IZGUBILI STE");
+                        if (matrica[m, n].zastava == true)
+                        {
+                            broj_zastavica++;
+                            matrica[m, n].zastava = false;
+                            cetka.Color = pbxTabela.BackColor;
+                            g.FillRectangle(cetka, m * (pbxTabela.Width / 9), n * (pbxTabela.Height / 9), 40, 40);
+                            cetka.Color = Color.Black;
+                        }
+                        Otvori_Polje(matrica, m, n, g, fontic, cetka, broj_neotvorenih_polja);
 
+
+
+                    }
+                    else if (matrica[m, n].mina && !matrica[m, n].otvoreno)
+                    {
+                        igra_gotova = true;
+                        for (int i = 0; i < 10; i++)
+                        {
+                            g.DrawString("☼", fontic, cetka, nizx[i] * (pbxTabela.Width / 9), nizy[i] * (pbxTabela.Height / 9));
+                        }
+                        timer1.Stop();
+                        vreme = 0;
+                        MessageBox.Show("KRAJ IGRE", "IZGUBILI STE");
+                    }
+
+                }
+
+                else if (e.Button == MouseButtons.Right)
+                {
+
+                    if (matrica[m, n].zastava == false && !matrica[m, n].otvoreno && broj_zastavica > 0)
+                    {
+                        g.DrawString("⚑", fontic, cetka, m * (pbxTabela.Width / 9), n * (pbxTabela.Height / 9));
+                        broj_zastavica--;
+                        matrica[m, n].zastava = true;
+                    }
+                    else if (matrica[m, n].zastava == true && !matrica[m, n].otvoreno)
+                    {
+                        cetka.Color = pbxTabela.BackColor;
+                        g.FillRectangle(cetka, m * (pbxTabela.Width / 9) + 1, n * (pbxTabela.Height / 9) + 1, 35, 35);
+                        cetka.Color = Color.Black;
+                        broj_zastavica++;
+                        matrica[m, n].zastava = false;
+                    }
                     tbxBrojZastavica.Text = broj_zastavica.ToString();
                     tbxBrojZastavica.Refresh();
                 }
-
             }
-
-            else if (e.Button == MouseButtons.Right )
-            {
-                int m = e.X / (pbxTabela.Width / 9);
-                int n = e.Y / (pbxTabela.Height / 9);
-
-                if (matrica[m, n].zastava == false && !matrica[m, n].otvoreno && broj_zastavica > 0)
-                {
-                    g.DrawString("⚑", fontic, cetka, m * (pbxTabela.Width / 9), n * (pbxTabela.Height / 9));
-                    broj_zastavica--;
-                    matrica[m, n].zastava = true;
-                }
-                else if (matrica[m, n].zastava == true && !matrica[m, n].otvoreno)
-                {
-                    cetka.Color = pbxTabela.BackColor;
-                    g.FillRectangle(cetka, m * (pbxTabela.Width / 9) + 1, n * (pbxTabela.Height / 9) + 1, 35, 35);
-                    cetka.Color = Color.Black;
-                    broj_zastavica++;
-                    matrica[m, n].zastava = false;
-                }
-                tbxBrojZastavica.Text = broj_zastavica.ToString();
-                tbxBrojZastavica.Refresh();
-            }
+            
         }
 
         //-----------------------------------algoritam-------------------------------------//
@@ -220,10 +232,15 @@ namespace Projekat_OOP
         }
 
         private void timer1_Tick(object sender, EventArgs e)
-        {         
+        {
             vreme++;
             tbxTajmer.Text = vreme.ToString();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
-    
+
 }

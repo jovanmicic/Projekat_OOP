@@ -34,7 +34,6 @@ namespace Projekat_OOP
             this.lblNaslov = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.tbxBrojZastavica = new System.Windows.Forms.TextBox();
-            this.lblBrojZastavica = new System.Windows.Forms.Label();
             this.tbxTajmer = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pbxTabela)).BeginInit();
@@ -43,7 +42,7 @@ namespace Projekat_OOP
             // pbxTabela
             // 
             this.pbxTabela.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.pbxTabela.Location = new System.Drawing.Point(31, 53);
+            this.pbxTabela.Location = new System.Drawing.Point(31, 63);
             this.pbxTabela.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pbxTabela.Name = "pbxTabela";
             this.pbxTabela.Size = new System.Drawing.Size(360, 360);
@@ -58,13 +57,13 @@ namespace Projekat_OOP
             this.lblNaslov.Font = new System.Drawing.Font("Showcard Gothic", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNaslov.Location = new System.Drawing.Point(113, 9);
             this.lblNaslov.Name = "lblNaslov";
-            this.lblNaslov.Size = new System.Drawing.Size(181, 40);
+            this.lblNaslov.Size = new System.Drawing.Size(240, 50);
             this.lblNaslov.TabIndex = 1;
             this.lblNaslov.Text = " Миноловац";
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(144, 462);
+            this.btnStart.Location = new System.Drawing.Point(140, 433);
             this.btnStart.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(134, 50);
@@ -77,24 +76,14 @@ namespace Projekat_OOP
             // 
             this.tbxBrojZastavica.Location = new System.Drawing.Point(31, 20);
             this.tbxBrojZastavica.Name = "tbxBrojZastavica";
-            this.tbxBrojZastavica.Size = new System.Drawing.Size(33, 26);
+            this.tbxBrojZastavica.Size = new System.Drawing.Size(33, 22);
             this.tbxBrojZastavica.TabIndex = 3;
-            // 
-            // lblBrojZastavica
-            // 
-            this.lblBrojZastavica.AutoSize = true;
-            this.lblBrojZastavica.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBrojZastavica.Location = new System.Drawing.Point(70, 20);
-            this.lblBrojZastavica.Name = "lblBrojZastavica";
-            this.lblBrojZastavica.Size = new System.Drawing.Size(54, 20);
-            this.lblBrojZastavica.TabIndex = 4;
-            this.lblBrojZastavica.Text = "Broj ⚑:";
             // 
             // tbxTajmer
             // 
             this.tbxTajmer.Location = new System.Drawing.Point(358, 23);
             this.tbxTajmer.Name = "tbxTajmer";
-            this.tbxTajmer.Size = new System.Drawing.Size(33, 26);
+            this.tbxTajmer.Size = new System.Drawing.Size(33, 22);
             this.tbxTajmer.TabIndex = 6;
             // 
             // timer1
@@ -106,9 +95,8 @@ namespace Projekat_OOP
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.ClientSize = new System.Drawing.Size(744, 664);
+            this.ClientSize = new System.Drawing.Size(421, 496);
             this.Controls.Add(this.tbxTajmer);
-            this.Controls.Add(this.lblBrojZastavica);
             this.Controls.Add(this.tbxBrojZastavica);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.lblNaslov);
@@ -131,7 +119,6 @@ namespace Projekat_OOP
         private System.Windows.Forms.Label lblNaslov;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.TextBox tbxBrojZastavica;
-        private System.Windows.Forms.Label lblBrojZastavica;
         private System.Windows.Forms.TextBox tbxTajmer;
         private System.Windows.Forms.Timer timer1;
     }
